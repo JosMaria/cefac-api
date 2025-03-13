@@ -22,11 +22,10 @@ public class AuthService {
 
     public TokenResponse register(RegisterRequest request) {
         User persistedUser = saveUser(request);
-//        String jwtToken = jwtService.generateToken(persistedUser);
-//        String refreshToken = jwtService.generateRefreshToken(persistedUser);
-//        saveUserToken(persistedUser, jwtToken);
-//        return new TokenResponse(jwtToken, refreshToken);
-        return null;
+        String jwtToken = jwtService.generateToken(persistedUser);
+        String refreshToken = jwtService.generateRefreshToken(persistedUser);
+        saveUserToken(persistedUser, jwtToken);
+        return new TokenResponse(jwtToken, refreshToken);
     }
 
     private User saveUser(RegisterRequest request) {

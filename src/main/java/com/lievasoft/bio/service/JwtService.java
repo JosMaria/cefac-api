@@ -1,5 +1,6 @@
 package com.lievasoft.bio.service;
 
+import com.lievasoft.bio.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -19,6 +20,36 @@ public class JwtService {
     private static final long ONE_MINUTE = 60000;
 
     private String secretKey = null;
+
+    private final long expiration = ONE_MINUTE * 5;
+    private final long refreshExpiration = ONE_MINUTE * 10;
+    private final String secret = "miClaveSecretaSuperSeguraYLoSuficientementeLarga";
+
+    public String generateToken(final User user) {
+        return buildToken(user, expiration);
+    }
+
+    public String generateRefreshToken(final User user) {
+        return buildToken(user, refreshExpiration);
+    }
+
+    private String buildToken(final User user, final long expiration) {
+        Date now = new Date(System.currentTimeMillis());
+        Date expirationDate = new Date(now.getTime() + expiration);
+        return Jwts.builder()
+                .id(user.getId().toString())
+                .claims(Map.of("name", user.getName()))
+                .subject(user.getEmail())
+                .issuedAt(now)
+                .expiration(expirationDate)
+                .signWith(getSignInKey())
+                .compact();
+    }
+
+    private SecretKey getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
 
     private SecretKey generateKey() {
         byte[] decode = Decoders.BASE64.decode(getSecretKey());
