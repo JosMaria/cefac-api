@@ -1,4 +1,4 @@
-package com.lievasoft.bio.security;
+package com.lievasoft.bio.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
