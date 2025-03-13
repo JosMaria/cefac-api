@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: bio
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bio_db
+    username: postgres
+    password: maria17
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true

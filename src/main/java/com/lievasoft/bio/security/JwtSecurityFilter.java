@@ -5,15 +5,18 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtSecurityFilter extends OncePerRequestFilter {
 
-    private final String SECRET_KEY = "tu-clave-secret-muy-segura-y-long-para-jwt";
+    private final JwtService jwtService;
+
     private final String PREFIX_TOKEN = "Bearer ";
 
     @Override
@@ -26,9 +29,7 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
         }
 
         String token = header.replace(PREFIX_TOKEN, "");
-        try {
 
-        }
 
 
 
