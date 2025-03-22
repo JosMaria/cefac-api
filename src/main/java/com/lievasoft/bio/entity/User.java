@@ -21,8 +21,8 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    private String name;
     private String password;
+    private String name;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Token> tokens;

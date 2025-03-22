@@ -19,7 +19,7 @@ public class JwtService {
     private static final long ONE_MINUTE = 60000;
 
     private final long expiration = ONE_MINUTE * 5;
-    private final long refreshExpiration = ONE_MINUTE * 10;
+    private final long refreshExpiration = ONE_MINUTE * 15;
     private final String secret = "miClaveSecretaSuperSeguraYLoSuficientementeLarga";
 
     public String generateToken(final User user) {
@@ -33,12 +33,12 @@ public class JwtService {
     private String buildToken(final User user, final long expiration) {
         Date now = new Date(System.currentTimeMillis());
         Date expirationDate = new Date(now.getTime() + expiration);
+
         return Jwts.builder()
-                .id(user.getId().toString())
-                .claims(Map.of("name", user.getName()))
                 .subject(user.getEmail())
                 .issuedAt(now)
                 .expiration(expirationDate)
+                .claims(Map.of("name", user.getName()))
                 .signWith(getSignInKey())
                 .compact();
     }

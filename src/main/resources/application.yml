@@ -7,8 +7,6 @@ spring:
     password: maria17
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: update
     show-sql: true
+    open-in-view: false

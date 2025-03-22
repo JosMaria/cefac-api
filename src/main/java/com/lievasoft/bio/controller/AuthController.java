@@ -15,12 +15,18 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<TokenResponse> register(@RequestBody final RegisterRequest request) {
-        return ResponseEntity.ok(service.register(request));
+        var response = service.register(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> authenticate(@RequestBody final LoginRequest request) {
         return ResponseEntity.ok(service.login(request));
+    }
+
+    @GetMapping("/etc")
+    public ResponseEntity<String> welcome() {
+        return ResponseEntity.ok("hello jose maria");
     }
 
     @PostMapping("/refresh")

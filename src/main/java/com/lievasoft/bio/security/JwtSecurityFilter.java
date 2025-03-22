@@ -6,6 +6,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,11 +30,21 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
              return;
         }
 
+        SecurityContextHolder.getContext();
+
         String token = header.replace(PREFIX_TOKEN, "");
 
 
 
 
         filterChain.doFilter(request, response);
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith(PREFIX_TOKEN)) {
+            return authHeader.replace(PREFIX_TOKEN, "");
+        }
+        return null;
     }
 }
