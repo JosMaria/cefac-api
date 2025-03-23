@@ -1,17 +1,14 @@
 package com.lievasoft.bio.service;
 
-import com.lievasoft.bio.entity.User;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 @Service
 public class JwtService {
@@ -22,23 +19,23 @@ public class JwtService {
     private final long refreshExpiration = ONE_MINUTE * 15;
     private final String secret = "miClaveSecretaSuperSeguraYLoSuficientementeLarga";
 
-    public String generateToken(final User user) {
+    public String generateToken(final UserDetails user) {
         return buildToken(user, expiration);
     }
 
-    public String generateRefreshToken(final User user) {
+    public String generateRefreshToken(final UserDetails user) {
         return buildToken(user, refreshExpiration);
     }
 
-    private String buildToken(final User user, final long expiration) {
+    private String buildToken(final UserDetails user, final long expiration) {
         Date now = new Date(System.currentTimeMillis());
         Date expirationDate = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
-                .subject(user.getEmail())
+                .subject(user.getUsername())
                 .issuedAt(now)
                 .expiration(expirationDate)
-                .claims(Map.of("name", user.getName()))
+                .claims(Map.of())
                 .signWith(getSignInKey())
                 .compact();
     }

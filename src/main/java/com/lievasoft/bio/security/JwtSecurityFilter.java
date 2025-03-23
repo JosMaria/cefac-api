@@ -30,13 +30,6 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
              return;
         }
 
-        SecurityContextHolder.getContext();
-
-        String token = header.replace(PREFIX_TOKEN, "");
-
-
-
-
         filterChain.doFilter(request, response);
     }
 

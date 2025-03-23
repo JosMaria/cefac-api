@@ -2,6 +2,7 @@ package com.lievasoft.bio.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -23,7 +24,4 @@ public class User {
 
     private String password;
     private String name;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Token> tokens;
 }
