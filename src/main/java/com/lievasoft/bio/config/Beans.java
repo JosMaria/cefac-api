@@ -1,7 +1,7 @@
 package com.lievasoft.bio.config;
 
-import com.lievasoft.bio.entity.User;
-import com.lievasoft.bio.repository.UserRepository;
+import com.lievasoft.bio.entity.BioUser;
+import com.lievasoft.bio.repository.BioUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class Beans {
 
-    private final UserRepository userRepository;
+    private final BioUserRepository bioUserRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -44,16 +44,16 @@ public class Beans {
     public UserDetailsService userDetailsService() {
         return username -> {
             log.debug("Loading user by username: {}", username);
-            User user = userRepository.findByEmail(username)
+            var user = bioUserRepository.findByUsername(username)
                     .orElseThrow(() -> {
                         String message = "username %s has not been found.".formatted(username);
                         log.error(message);
                         return new UsernameNotFoundException(message);
                     });
 
-            log.debug("User found: {}", user.getEmail());
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getEmail())
+            log.debug("User found: {}", user.getUsername());
+            return BioUser.builder()
+                    .username(user.getUsername())
                     .password(user.getPassword())
                     .build();
         };

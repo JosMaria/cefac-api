@@ -14,8 +14,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -64,12 +67,20 @@ public class DefaultAuthService implements AuthService {
 
     @Override
     public TokenResponse login(final LoginRequest request) {
-        var authentication = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+        var authentication = new UsernamePasswordAuthenticationToken(request.username(), request.password());
         Authentication authenticated = authenticationManager.authenticate(authentication);
-        var principal = (UserDetails) authenticated.getPrincipal();
+        String username = ((UserDetails) authenticated.getPrincipal()).getUsername();
+        BioUser userObtained = bioUserRepository.findByUsername(username)
+                .orElseThrow(() -> {
+                    String message = "username %s has not been found.".formatted(username);
+                    log.error(message);
+                    return new UsernameNotFoundException(message);
+                });
 
-
-        return null;
+        var jwtToken = jwtService.generateToken(userObtained);
+        var jwtRefreshToken = jwtService.generateRefreshToken(userObtained);
+        saveBioUserToken(userObtained, jwtToken);
+        return new TokenResponse(jwtToken, jwtRefreshToken);
     }
 
     @Override
