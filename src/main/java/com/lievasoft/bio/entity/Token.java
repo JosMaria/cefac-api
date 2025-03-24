@@ -29,7 +29,7 @@ public class Token {
     private boolean expired = false;
     private boolean revoked = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    public BioUser user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    public BioUser user;
 }

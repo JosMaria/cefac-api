@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,8 +59,7 @@ public class DefaultAuthService implements AuthService {
     public TokenResponse login(final LoginRequest request) {
         var authentication = new UsernamePasswordAuthenticationToken(request.username(), request.password());
         Authentication authenticated = authenticationManager.authenticate(authentication);
-        String username = ((UserDetails) authenticated.getPrincipal()).getUsername();
-        customUserRepository.findByUsername(username).ifPresent(this::generateTokens);
+        var obtainedCustomUser = (CustomUser) authenticated.getPrincipal();
 
 //        BioUser userObtained = bioUserRepository.findByUsername(username)
 //                .orElseThrow(() -> {
@@ -70,7 +68,7 @@ public class DefaultAuthService implements AuthService {
 //                    return new UsernameNotFoundException(message);
 //                });
 //        return generateTokens(userObtained);
-        return null;
+        return generateTokens(obtainedCustomUser);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.lievasoft.bio.security;
 
-import com.lievasoft.bio.service.impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,8 +13,6 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtSecurityFilter extends OncePerRequestFilter {
-
-    private final JwtService jwtService;
 
     private final String PREFIX_TOKEN = "Bearer ";
 
