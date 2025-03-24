@@ -5,6 +5,7 @@ import com.lievasoft.bio.controller.RegisterRequest;
 import com.lievasoft.bio.controller.TokenResponse;
 import com.lievasoft.bio.entity.BioUser;
 import com.lievasoft.bio.entity.Token;
+import com.lievasoft.bio.mapper.Mapper;
 import com.lievasoft.bio.repository.BioUserRepository;
 import com.lievasoft.bio.repository.TokenRepository;
 import jakarta.persistence.EntityExistsException;
@@ -15,10 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -26,10 +24,10 @@ import java.util.Optional;
 public class DefaultAuthService implements AuthService {
 
     private final TokenRepository tokenRepository;
-    private final PasswordEncoder passwordEncoder;
     private final BioUserRepository bioUserRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final Mapper mapper;
 
     @Override
     public TokenResponse register(final RegisterRequest request) {
@@ -46,12 +44,8 @@ public class DefaultAuthService implements AuthService {
         return new TokenResponse(jwtToken, refreshToken);
     }
 
-    private BioUser saveBioUser(RegisterRequest request) {
-        var bioUserToPersist = BioUser.builder()
-                .username(request.username())
-                .password(passwordEncoder.encode(request.password()))
-                .build();
-
+    private BioUser saveBioUser(final RegisterRequest payload) {
+        var bioUserToPersist = mapper.mapToBioUser(payload);
         return bioUserRepository.save(bioUserToPersist);
     }
 
