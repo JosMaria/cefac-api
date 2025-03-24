@@ -1,4 +1,4 @@
-package com.lievasoft.bio.controller;
+package com.lievasoft.bio.dto;
 
 public record RegisterRequest(
         String username,

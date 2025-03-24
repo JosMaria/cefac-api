@@ -1,7 +1,6 @@
 package com.lievasoft.bio.config;
 
-import com.lievasoft.bio.entity.BioUser;
-import com.lievasoft.bio.repository.BioUserRepository;
+import com.lievasoft.bio.service.CustomUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -20,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class Beans {
 
-    private final BioUserRepository bioUserRepository;
+    private final CustomUserService customUserService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -29,33 +26,15 @@ public class Beans {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(passwordEncoder());
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setHideUserNotFoundExceptions(false);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(customUserService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+//        authProvider.setHideUserNotFoundExceptions(false);
         return authProvider;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> {
-            log.debug("Loading user by username: {}", username);
-            var user = bioUserRepository.findByUsername(username)
-                    .orElseThrow(() -> {
-                        String message = "username %s has not been found.".formatted(username);
-                        log.error(message);
-                        return new UsernameNotFoundException(message);
-                    });
-
-            log.debug("User found: {}", user.getUsername());
-            return BioUser.builder()
-                    .username(user.getUsername())
-                    .password(user.getPassword())
-                    .build();
-        };
     }
 }

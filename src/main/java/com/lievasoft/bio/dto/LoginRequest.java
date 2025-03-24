@@ -1,7 +1,6 @@
-package com.lievasoft.bio.controller;
+package com.lievasoft.bio.dto;
 
 public record LoginRequest(
-        String email,
         String username,
         String password
 ) {

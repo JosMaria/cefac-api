@@ -1,6 +1,6 @@
 package com.lievasoft.bio.security;
 
-import com.lievasoft.bio.service.JwtService;
+import com.lievasoft.bio.service.impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

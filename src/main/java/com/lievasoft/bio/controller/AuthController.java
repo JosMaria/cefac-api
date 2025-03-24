@@ -1,5 +1,8 @@
 package com.lievasoft.bio.controller;
 
+import com.lievasoft.bio.dto.LoginRequest;
+import com.lievasoft.bio.dto.RegisterRequest;
+import com.lievasoft.bio.dto.TokenResponse;
 import com.lievasoft.bio.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -22,11 +25,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> authenticate(@RequestBody final LoginRequest request) {
         return ResponseEntity.ok(service.login(request));
-    }
-
-    @GetMapping("/etc")
-    public ResponseEntity<String> welcome() {
-        return ResponseEntity.ok("hello jose maria");
     }
 
     @PostMapping("/refresh")

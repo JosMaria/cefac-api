@@ -1,0 +1,80 @@
+package com.lievasoft.bio.service.impl;
+
+import com.lievasoft.bio.dto.LoginRequest;
+import com.lievasoft.bio.dto.RegisterRequest;
+import com.lievasoft.bio.dto.TokenResponse;
+import com.lievasoft.bio.entity.CustomUser;
+import com.lievasoft.bio.mapper.CustomUserMapper;
+import com.lievasoft.bio.repository.CustomUserRepository;
+import com.lievasoft.bio.service.AuthService;
+import jakarta.persistence.EntityExistsException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class DefaultAuthService implements AuthService {
+
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final CustomUserMapper customUserMapper;
+    private final CustomUserRepository customUserRepository;
+
+    @Override
+    public TokenResponse register(final RegisterRequest payload) {
+        throwExceptionIfExistsCustomUser(payload.username());
+        var customUserToPersist = customUserMapper.map(payload);
+        var persistedCustomUser = customUserRepository.save(customUserToPersist);
+        return generateTokens(persistedCustomUser);
+    }
+
+    private void throwExceptionIfExistsCustomUser(String username) {
+        if (customUserRepository.existsByUsername(username)) {
+            throw new EntityExistsException("User with username %s already exists".formatted(username));
+        }
+    }
+
+    private TokenResponse generateTokens(CustomUser user) {
+        String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        return new TokenResponse(jwtToken, refreshToken);
+//        Token tokenToPersist = createTokenToPersist(user, jwtToken);
+//        tokenRepository.save(tokenToPersist);
+    }
+
+//    private Token createTokenToPersist(BioUser user, String jwtToken) {
+//        return Token.builder()
+//                .user(user)
+//                .token(jwtToken)
+//                .tokenType(Token.TokenType.BEARER)
+//                .build();
+//    }
+
+    @Override
+    public TokenResponse login(final LoginRequest request) {
+        var authentication = new UsernamePasswordAuthenticationToken(request.username(), request.password());
+        Authentication authenticated = authenticationManager.authenticate(authentication);
+        String username = ((UserDetails) authenticated.getPrincipal()).getUsername();
+        customUserRepository.findByUsername(username).ifPresent(this::generateTokens);
+
+//        BioUser userObtained = bioUserRepository.findByUsername(username)
+//                .orElseThrow(() -> {
+//                    String message = "username %s has not been found.".formatted(username);
+//                    log.error(message);
+//                    return new UsernameNotFoundException(message);
+//                });
+//        return generateTokens(userObtained);
+        return null;
+    }
+
+    @Override
+    public TokenResponse refreshToken(String authHeader) {
+        return null;
+    }
+}

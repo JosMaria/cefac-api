@@ -1,20 +1,20 @@
 package com.lievasoft.bio.mapper;
 
-import com.lievasoft.bio.controller.RegisterRequest;
-import com.lievasoft.bio.entity.BioUser;
+import com.lievasoft.bio.dto.RegisterRequest;
+import com.lievasoft.bio.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class Mapper {
+public class CustomUserMapper {
 
     private final PasswordEncoder passwordEncoder;
 
-    public BioUser mapToBioUser(final RegisterRequest payload) {
+    public CustomUser map(final RegisterRequest payload) {
         var password = passwordEncoder.encode(payload.password());
-        return BioUser.builder()
+        return CustomUser.builder()
                 .username(payload.username())
                 .password(password)
                 .build();
