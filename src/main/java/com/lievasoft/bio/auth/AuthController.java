@@ -3,6 +3,7 @@ package com.lievasoft.bio.auth;
 import com.lievasoft.bio.auth.dto.LoginRequest;
 import com.lievasoft.bio.auth.dto.RegisterRequest;
 import com.lievasoft.bio.auth.dto.TokenResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class AuthController {
     private final AuthService service;
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(@RequestBody final RegisterRequest request) {
+    public ResponseEntity<TokenResponse> register(@Valid @RequestBody final RegisterRequest request) {
         var response = service.register(request);
         return ResponseEntity.ok(response);
     }
