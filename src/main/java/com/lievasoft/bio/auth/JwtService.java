@@ -1,4 +1,4 @@
-package com.lievasoft.bio.service.impl;
+package com.lievasoft.bio.auth;
 
 import com.lievasoft.bio.entity.CustomUser;
 import io.jsonwebtoken.Jwts;

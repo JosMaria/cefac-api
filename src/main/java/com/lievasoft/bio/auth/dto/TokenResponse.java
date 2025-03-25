@@ -1,4 +1,4 @@
-package com.lievasoft.bio.dto;
+package com.lievasoft.bio.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

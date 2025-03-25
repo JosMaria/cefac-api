@@ -1,4 +1,4 @@
-package com.lievasoft.bio.service;
+package com.lievasoft.bio.user;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 

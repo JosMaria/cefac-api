@@ -1,9 +1,8 @@
-package com.lievasoft.bio.controller;
+package com.lievasoft.bio.auth;
 
-import com.lievasoft.bio.dto.LoginRequest;
-import com.lievasoft.bio.dto.RegisterRequest;
-import com.lievasoft.bio.dto.TokenResponse;
-import com.lievasoft.bio.service.AuthService;
+import com.lievasoft.bio.auth.dto.LoginRequest;
+import com.lievasoft.bio.auth.dto.RegisterRequest;
+import com.lievasoft.bio.auth.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

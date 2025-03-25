@@ -1,8 +1,8 @@
-package com.lievasoft.bio.service;
+package com.lievasoft.bio.auth;
 
-import com.lievasoft.bio.dto.LoginRequest;
-import com.lievasoft.bio.dto.RegisterRequest;
-import com.lievasoft.bio.dto.TokenResponse;
+import com.lievasoft.bio.auth.dto.LoginRequest;
+import com.lievasoft.bio.auth.dto.RegisterRequest;
+import com.lievasoft.bio.auth.dto.TokenResponse;
 
 public interface AuthService {
 

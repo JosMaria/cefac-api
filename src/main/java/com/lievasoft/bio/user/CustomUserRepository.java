@@ -1,4 +1,4 @@
-package com.lievasoft.bio.repository;
+package com.lievasoft.bio.user;
 
 import com.lievasoft.bio.entity.CustomUser;
 import org.springframework.data.jpa.repository.JpaRepository;

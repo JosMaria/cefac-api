@@ -1,6 +1,5 @@
-package com.lievasoft.bio.config;
+package com.lievasoft.bio.security;
 
-import com.lievasoft.bio.security.JwtSecurityFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

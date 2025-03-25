@@ -1,14 +1,12 @@
-package com.lievasoft.bio.service.impl;
+package com.lievasoft.bio.auth;
 
-import com.lievasoft.bio.dto.LoginRequest;
-import com.lievasoft.bio.dto.RegisterRequest;
-import com.lievasoft.bio.dto.TokenResponse;
+import com.lievasoft.bio.auth.dto.LoginRequest;
+import com.lievasoft.bio.auth.dto.RegisterRequest;
+import com.lievasoft.bio.auth.dto.TokenResponse;
 import com.lievasoft.bio.entity.CustomUser;
 import com.lievasoft.bio.entity.Token;
-import com.lievasoft.bio.mapper.CustomUserMapper;
-import com.lievasoft.bio.repository.CustomUserRepository;
-import com.lievasoft.bio.repository.TokenRepository;
-import com.lievasoft.bio.service.AuthService;
+import com.lievasoft.bio.user.CustomUserMapper;
+import com.lievasoft.bio.user.CustomUserRepository;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class DefaultAuthService implements AuthService {
+public class AuthDefaultService implements AuthService {
 
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;

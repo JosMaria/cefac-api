@@ -1,4 +1,4 @@
-package com.lievasoft.bio.repository;
+package com.lievasoft.bio.auth;
 
 import com.lievasoft.bio.entity.Token;
 import org.springframework.data.jpa.repository.JpaRepository;

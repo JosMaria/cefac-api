@@ -1,4 +1,4 @@
-package com.lievasoft.bio.dto;
+package com.lievasoft.bio.auth.dto;
 
 public record LoginRequest(
         String username,

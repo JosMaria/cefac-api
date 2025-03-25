@@ -1,6 +1,6 @@
-package com.lievasoft.bio.mapper;
+package com.lievasoft.bio.user;
 
-import com.lievasoft.bio.dto.RegisterRequest;
+import com.lievasoft.bio.auth.dto.RegisterRequest;
 import com.lievasoft.bio.entity.CustomUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
