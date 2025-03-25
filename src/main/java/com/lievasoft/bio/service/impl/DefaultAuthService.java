@@ -4,8 +4,10 @@ import com.lievasoft.bio.dto.LoginRequest;
 import com.lievasoft.bio.dto.RegisterRequest;
 import com.lievasoft.bio.dto.TokenResponse;
 import com.lievasoft.bio.entity.CustomUser;
+import com.lievasoft.bio.entity.Token;
 import com.lievasoft.bio.mapper.CustomUserMapper;
 import com.lievasoft.bio.repository.CustomUserRepository;
+import com.lievasoft.bio.repository.TokenRepository;
 import com.lievasoft.bio.service.AuthService;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class DefaultAuthService implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final CustomUserMapper customUserMapper;
     private final CustomUserRepository customUserRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     public TokenResponse register(final RegisterRequest payload) {
@@ -31,6 +34,19 @@ public class DefaultAuthService implements AuthService {
         var customUserToPersist = customUserMapper.map(payload);
         var persistedCustomUser = customUserRepository.save(customUserToPersist);
         return generateTokens(persistedCustomUser);
+    }
+
+    @Override
+    public TokenResponse login(final LoginRequest request) {
+        var authentication = new UsernamePasswordAuthenticationToken(request.username(), request.password());
+        Authentication authenticated = authenticationManager.authenticate(authentication);
+        var obtainedCustomUser = (CustomUser) authenticated.getPrincipal();
+        return generateTokens(obtainedCustomUser);
+    }
+
+    @Override
+    public TokenResponse refreshToken(String authHeader) {
+        return null;
     }
 
     private void throwExceptionIfExistsCustomUser(String username) {
@@ -42,37 +58,16 @@ public class DefaultAuthService implements AuthService {
     private TokenResponse generateTokens(CustomUser user) {
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
+        Token tokenToPersist = createTokenToPersist(user, jwtToken);
+        tokenRepository.save(tokenToPersist);
         return new TokenResponse(jwtToken, refreshToken);
-//        Token tokenToPersist = createTokenToPersist(user, jwtToken);
-//        tokenRepository.save(tokenToPersist);
     }
 
-//    private Token createTokenToPersist(BioUser user, String jwtToken) {
-//        return Token.builder()
-//                .user(user)
-//                .token(jwtToken)
-//                .tokenType(Token.TokenType.BEARER)
-//                .build();
-//    }
-
-    @Override
-    public TokenResponse login(final LoginRequest request) {
-        var authentication = new UsernamePasswordAuthenticationToken(request.username(), request.password());
-        Authentication authenticated = authenticationManager.authenticate(authentication);
-        var obtainedCustomUser = (CustomUser) authenticated.getPrincipal();
-
-//        BioUser userObtained = bioUserRepository.findByUsername(username)
-//                .orElseThrow(() -> {
-//                    String message = "username %s has not been found.".formatted(username);
-//                    log.error(message);
-//                    return new UsernameNotFoundException(message);
-//                });
-//        return generateTokens(userObtained);
-        return generateTokens(obtainedCustomUser);
-    }
-
-    @Override
-    public TokenResponse refreshToken(String authHeader) {
-        return null;
+    private Token createTokenToPersist(CustomUser user, String jwtToken) {
+        return Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(Token.TokenType.BEARER)
+                .build();
     }
 }

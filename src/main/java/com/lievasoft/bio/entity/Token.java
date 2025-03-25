@@ -3,6 +3,8 @@ package com.lievasoft.bio.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Builder
 @Getter
 @Setter
@@ -11,10 +13,6 @@ import lombok.*;
 @Entity
 @Table(name = "tokens")
 public class Token {
-
-    public enum TokenType {
-        BEARER
-    }
 
     @Id
     @GeneratedValue
@@ -29,7 +27,11 @@ public class Token {
     private boolean expired = false;
     private boolean revoked = false;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    public BioUser user;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    public CustomUser user;
+
+    public enum TokenType {
+        BEARER
+    }
 }

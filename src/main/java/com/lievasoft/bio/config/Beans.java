@@ -29,7 +29,6 @@ public class Beans {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(customUserService);
         authProvider.setPasswordEncoder(passwordEncoder());
-//        authProvider.setHideUserNotFoundExceptions(false);
         return authProvider;
     }
 

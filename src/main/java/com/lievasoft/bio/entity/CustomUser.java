@@ -30,6 +30,9 @@ public class CustomUser implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @OneToMany(mappedBy = "user")
+    private Collection<Token> tokens;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
