@@ -3,6 +3,7 @@ package com.lievasoft.bio.exception;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -16,24 +17,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(EntityExistsException.class)
+    @ExceptionHandler({EntityExistsException.class})
     public ResponseEntity<ErrorResponse> handleRepeatCustomUser(EntityExistsException ex, HttpServletRequest request) {
-        var response = createErrorResponse(request.getServletPath(), ex.getMessage());
-        log.error(ex.getMessage());
-        return new ResponseEntity<>(response, BAD_REQUEST);
+        return createErrorResponse(ex.getMessage(), request.getServletPath(), BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUsernameNotFound(UsernameNotFoundException ex, HttpServletRequest request) {
         String message = "username %s has not been found.".formatted(ex.getMessage());
-        var response = createErrorResponse(request.getServletPath(), message);
-        log.error(message);
-        return new ResponseEntity<>(response, BAD_REQUEST);
+        return createErrorResponse(message, request.getServletPath(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler({TokenInvalidException.class})
+    public ResponseEntity<ErrorResponse> handleTokenInvalidException(TokenInvalidException ex, HttpServletRequest request) {
+        return createErrorResponse(ex.getMessage(), request.getServletPath(), UNAUTHORIZED);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -50,7 +53,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, BAD_REQUEST);
     }
 
-    private ErrorResponse createErrorResponse(String path, String message) {
-        return new ErrorResponse(path, message, LocalDateTime.now(ZoneId.of("America/La_Paz")));
+    private ResponseEntity<ErrorResponse> createErrorResponse(String message, String path, HttpStatus status) {
+        var response = new ErrorResponse(path, message, LocalDateTime.now(ZoneId.of("America/La_Paz")));
+        log.error(message);
+        return new ResponseEntity<>(response, status);
     }
 }
