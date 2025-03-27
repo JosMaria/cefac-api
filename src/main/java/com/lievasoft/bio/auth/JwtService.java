@@ -2,6 +2,7 @@ package com.lievasoft.bio.auth;
 
 import com.lievasoft.bio.entity.CustomUser;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -18,7 +19,7 @@ public class JwtService {
     private static final long ONE_MINUTE = 60000;
 
     private final long expiration = ONE_MINUTE * 5;
-    private final long refreshExpiration = ONE_MINUTE * 15;
+    private final long refreshExpiration = ONE_MINUTE * 10;
     private final String secret = "miClaveSecretaSuperSeguraYLoSuficientementeLarga";
 
     public String generateToken(final CustomUser user) {
@@ -40,11 +41,6 @@ public class JwtService {
                 .claims(Map.of())
                 .signWith(getSignInKey())
                 .compact();
-    }
-
-    public boolean isTokenExpired(String token) {
-        Date expiration = extractClaims(token, Claims::getExpiration);
-        return expiration.before(new Date());
     }
 
     public String extractUsername(final String token) {

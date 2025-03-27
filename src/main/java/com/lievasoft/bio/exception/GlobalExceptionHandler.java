@@ -1,5 +1,6 @@
 package com.lievasoft.bio.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,8 @@ public class GlobalExceptionHandler {
         return createErrorResponse(message, request.getServletPath(), BAD_REQUEST);
     }
 
-    @ExceptionHandler({TokenInvalidException.class})
-    public ResponseEntity<ErrorResponse> handleTokenInvalidException(TokenInvalidException ex, HttpServletRequest request) {
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleTokenInvalidException(ExpiredJwtException ex, HttpServletRequest request) {
         return createErrorResponse(ex.getMessage(), request.getServletPath(), UNAUTHORIZED);
     }
 

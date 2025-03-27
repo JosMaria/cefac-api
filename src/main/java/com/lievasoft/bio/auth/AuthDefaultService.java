@@ -5,7 +5,7 @@ import com.lievasoft.bio.auth.dto.RegisterRequest;
 import com.lievasoft.bio.auth.dto.TokenResponse;
 import com.lievasoft.bio.entity.CustomUser;
 import com.lievasoft.bio.entity.Token;
-import com.lievasoft.bio.exception.TokenInvalidException;
+import com.lievasoft.bio.exception.BearerTokenException;
 import com.lievasoft.bio.user.CustomUserMapper;
 import com.lievasoft.bio.user.CustomUserRepository;
 import jakarta.persistence.EntityExistsException;
@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -45,29 +47,23 @@ public class AuthDefaultService implements AuthService {
     }
 
     @Override
-    public TokenResponse refreshToken(String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            var refreshToken = authHeader.replace("Bearer ", "");
+    public TokenResponse refreshToken(final String authHeader) {
+        var refreshToken = getValueBearerToken(authHeader).orElseThrow(BearerTokenException::new);
+        var username = jwtService.extractUsername(refreshToken);
+        var obtainedCustomUser = customUserRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-            if (!jwtService.isTokenExpired(refreshToken)) {
-                var username = jwtService.extractUsername(refreshToken);
-                var obtainedCustomUser = customUserRepository
-                        .findByUsername(username)
-                        .orElseThrow(() -> new UsernameNotFoundException(username));
-
-                return generateTokens(obtainedCustomUser);
-            } else {
-                throw new IllegalStateException("Refresh token expired");
-            }
-        } else {
-            throw new IllegalArgumentException("Bearer token header is invalid");
-        }
+        return generateTokens(obtainedCustomUser);
     }
 
-    private void throwExceptionIfTokenIsExpired(String token) {
-        if (jwtService.isTokenExpired(token)) {
-            throw new TokenInvalidException("Refresh token expired");
+    private Optional<String> getValueBearerToken(String authHeader) {
+        final var prefix = "Bearer ";
+        if (authHeader != null && authHeader.startsWith(prefix)) {
+            String response = authHeader.replace(prefix, "");
+            return Optional.of(response);
         }
+
+        return Optional.empty();
     }
 
     private void throwExceptionIfExistsCustomUser(String username) {
