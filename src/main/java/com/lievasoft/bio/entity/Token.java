@@ -19,13 +19,12 @@ public class Token {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String token;
+    private String value;
 
     @Enumerated(EnumType.STRING)
     private TokenType tokenType = TokenType.BEARER;
 
-    private boolean expired = false;
-    private boolean revoked = false;
+    private boolean blocked;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", nullable = false)

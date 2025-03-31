@@ -5,7 +5,6 @@ import com.lievasoft.bio.auth.dto.RegisterRequest;
 import com.lievasoft.bio.auth.dto.TokenResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class AuthController {
 
     private final AuthService service;
-    private final JwtService jwtService;
 
     @PostMapping("/register")
     public ResponseEntity<TokenResponse> register(@Valid @RequestBody final RegisterRequest request) {

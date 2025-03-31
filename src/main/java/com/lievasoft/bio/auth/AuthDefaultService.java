@@ -8,6 +8,7 @@ import com.lievasoft.bio.entity.Token;
 import com.lievasoft.bio.exception.BearerTokenException;
 import com.lievasoft.bio.user.CustomUserMapper;
 import com.lievasoft.bio.user.CustomUserRepository;
+import com.lievasoft.bio.utils.HelperService;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -29,6 +28,7 @@ public class AuthDefaultService implements AuthService {
     private final CustomUserMapper customUserMapper;
     private final CustomUserRepository customUserRepository;
     private final TokenRepository tokenRepository;
+    private final HelperService helper;
 
     @Override
     public TokenResponse register(final RegisterRequest payload) {
@@ -48,22 +48,12 @@ public class AuthDefaultService implements AuthService {
 
     @Override
     public TokenResponse refreshToken(final String authHeader) {
-        var refreshToken = getValueBearerToken(authHeader).orElseThrow(BearerTokenException::new);
+        var refreshToken = helper.getValueBearerToken(authHeader).orElseThrow(BearerTokenException::new);
         var username = jwtService.extractUsername(refreshToken);
         var obtainedCustomUser = customUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
         return generateTokens(obtainedCustomUser);
-    }
-
-    private Optional<String> getValueBearerToken(String authHeader) {
-        final var prefix = "Bearer ";
-        if (authHeader != null && authHeader.startsWith(prefix)) {
-            String response = authHeader.replace(prefix, "");
-            return Optional.of(response);
-        }
-
-        return Optional.empty();
     }
 
     private void throwExceptionIfExistsCustomUser(String username) {
@@ -83,7 +73,7 @@ public class AuthDefaultService implements AuthService {
     private Token createTokenToPersist(CustomUser user, String jwtToken) {
         return Token.builder()
                 .user(user)
-                .token(jwtToken)
+                .value(jwtToken)
                 .tokenType(Token.TokenType.BEARER)
                 .build();
     }
