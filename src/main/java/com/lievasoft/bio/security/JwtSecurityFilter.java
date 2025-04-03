@@ -32,7 +32,8 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
     private final TokenRepository tokenRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         boolean isToRefreshToken = request.getServletPath().contains("/auth/refresh-token");
         String authHeader = request.getHeader(AUTHORIZATION);
 
@@ -41,7 +42,7 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-        var optionalValueToken = helper.getValueBearerToken(authHeader);
+        var optionalValueToken = helper.getBearerToken(authHeader);
         if (optionalValueToken.isPresent()) {
             String valueToken = optionalValueToken.get();
 
@@ -60,10 +61,10 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
 
     public boolean isTokenValid(String value) {
         boolean isValid = false;
-        var optionalToken = tokenRepository.findByValue(value);
+        var optionalToken = tokenRepository.findByToken(value);
         if (optionalToken.isPresent()) {
             Token obtainedToken = optionalToken.get();
-            isValid = !obtainedToken.isBlocked();
+            isValid = !obtainedToken.isRevoked();
         }
 
         return isValid;

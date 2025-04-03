@@ -10,3 +10,7 @@ spring:
       ddl-auto: create-drop
     show-sql: true
     open-in-view: false
+server:
+  error:
+    include-message: always
+

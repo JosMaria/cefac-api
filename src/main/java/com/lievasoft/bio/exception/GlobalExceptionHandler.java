@@ -26,8 +26,13 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({EntityExistsException.class, EntityNotFoundException.class})
-    public ResponseEntity<ErrorResponse> handleRepeatCustomUser(PersistenceException ex, HttpServletRequest request) {
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<ErrorResponse> handleRepeatCustomUser(EntityExistsException ex, HttpServletRequest request) {
+        return createErrorResponse(ex.getMessage(), request.getServletPath(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEntityNotFound(EntityNotFoundException ex, HttpServletRequest request) {
         return createErrorResponse(ex.getMessage(), request.getServletPath(), BAD_REQUEST);
     }
 

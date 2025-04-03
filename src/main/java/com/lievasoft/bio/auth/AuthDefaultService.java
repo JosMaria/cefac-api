@@ -48,7 +48,7 @@ public class AuthDefaultService implements AuthService {
 
     @Override
     public TokenResponse refreshToken(final String authHeader) {
-        var refreshToken = helper.getValueBearerToken(authHeader).orElseThrow(BearerTokenException::new);
+        var refreshToken = helper.getBearerToken(authHeader).orElseThrow(BearerTokenException::new);
         var username = jwtService.extractUsername(refreshToken);
         var obtainedCustomUser = customUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
@@ -73,7 +73,7 @@ public class AuthDefaultService implements AuthService {
     private Token createTokenToPersist(CustomUser user, String jwtToken) {
         return Token.builder()
                 .user(user)
-                .value(jwtToken)
+                .token(jwtToken)
                 .tokenType(Token.TokenType.BEARER)
                 .build();
     }
