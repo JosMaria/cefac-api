@@ -42,24 +42,22 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-        var optionalValueToken = helper.getBearerToken(authHeader);
-        if (optionalValueToken.isPresent()) {
-            String valueToken = optionalValueToken.get();
-
-            if (isTokenValid(valueToken)) {
-                var username = jwtService.extractUsername(valueToken);
-                var user = (CustomUser) customUserService.loadUserByUsername(username);
-                var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
-                authenticationToken.setDetails(details);
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-        }
+        helper.obtainBearer(authHeader)
+                .ifPresent(token -> {
+                    if (isTokenValid(token)) {
+                        var username = jwtService.extractUsername(token);
+                        var user = (CustomUser) customUserService.loadUserByUsername(username);
+                        var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                        WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
+                        authenticationToken.setDetails(details);
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    }
+                });
 
         filterChain.doFilter(request, response);
     }
 
-    public boolean isTokenValid(String value) {
+    private boolean isTokenValid(String value) {
         boolean isValid = false;
         var optionalToken = tokenRepository.findByToken(value);
         if (optionalToken.isPresent()) {

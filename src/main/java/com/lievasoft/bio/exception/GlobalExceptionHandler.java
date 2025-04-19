@@ -3,7 +3,6 @@ package com.lievasoft.bio.exception;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityExistsException.class)
-    public ResponseEntity<ErrorResponse> handleRepeatCustomUser(EntityExistsException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleRepeatEntity(EntityExistsException ex, HttpServletRequest request) {
         return createErrorResponse(ex.getMessage(), request.getServletPath(), BAD_REQUEST);
     }
 
@@ -44,6 +43,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorResponse> handleTokenInvalidException(ExpiredJwtException ex, HttpServletRequest request) {
+        System.out.println("i am exception ExpiredJwtExceptio");
         return createErrorResponse(ex.getMessage(), request.getServletPath(), UNAUTHORIZED);
     }
 

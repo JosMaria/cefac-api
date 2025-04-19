@@ -2,6 +2,7 @@ package com.lievasoft.bio.security;
 
 import com.lievasoft.bio.auth.TokenRepository;
 import com.lievasoft.bio.entity.Token;
+import com.lievasoft.bio.exception.BearerTokenException;
 import com.lievasoft.bio.utils.HelperService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,10 +24,10 @@ public class CustomLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        var auth = request.getHeader(AUTHORIZATION);
-        var token = helper.getToken(auth);
-
-        Token obtainedToken = tokenRepository.findByToken(token)
+        var authHeader = request.getHeader(AUTHORIZATION);
+        var token = helper.obtainBearer(authHeader).orElseThrow(BearerTokenException::new);
+        Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
+        var obtainedToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new EntityNotFoundException("Token not found"));
         obtainedToken.setRevoked(true);
         tokenRepository.save(obtainedToken);

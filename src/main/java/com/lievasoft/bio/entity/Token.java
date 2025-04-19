@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Builder
 @Getter
@@ -15,7 +16,8 @@ import static jakarta.persistence.FetchType.LAZY;
 public class Token {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = SEQUENCE, generator = "token_sequence")
+    @SequenceGenerator(name = "token_sequence", sequenceName = "token_sequence", allocationSize = 1)
     private Long id;
 
     @Column(unique = true, nullable = false)

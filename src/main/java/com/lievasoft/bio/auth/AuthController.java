@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
-@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
     private final AuthService service;
@@ -24,13 +24,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> authenticate(@RequestBody final LoginRequest request) {
+    public ResponseEntity<TokenResponse> authenticate(@Valid @RequestBody final LoginRequest request) {
         TokenResponse response = service.login(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/refresh-token")
-    public TokenResponse refreshToken(@RequestHeader(AUTHORIZATION) final String authHeader) {
+    public TokenResponse refreshToken(@RequestHeader(value = AUTHORIZATION) final String authHeader) {
         return service.refreshToken(authHeader);
     }
 }

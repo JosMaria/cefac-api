@@ -2,7 +2,6 @@ package com.lievasoft.bio.auth;
 
 import com.lievasoft.bio.entity.CustomUser;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

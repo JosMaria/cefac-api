@@ -48,11 +48,12 @@ public class AuthDefaultService implements AuthService {
 
     @Override
     public TokenResponse refreshToken(final String authHeader) {
-        var refreshToken = helper.getBearerToken(authHeader).orElseThrow(BearerTokenException::new);
+        var refreshToken = helper.obtainBearer(authHeader).orElseThrow(BearerTokenException::new);
         var username = jwtService.extractUsername(refreshToken);
         var obtainedCustomUser = customUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
-
+        var countUpdatedTokens = tokenRepository.revokeTokensByUserId(obtainedCustomUser.getId());
+        log.info("The count of updated tokens is {}", countUpdatedTokens);
         return generateTokens(obtainedCustomUser);
     }
 
@@ -65,12 +66,12 @@ public class AuthDefaultService implements AuthService {
     private TokenResponse generateTokens(CustomUser user) {
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
-        Token tokenToPersist = createTokenToPersist(user, jwtToken);
+        Token tokenToPersist = createTokenEntity(user, jwtToken);
         tokenRepository.save(tokenToPersist);
         return new TokenResponse(jwtToken, refreshToken);
     }
 
-    private Token createTokenToPersist(CustomUser user, String jwtToken) {
+    private Token createTokenEntity(CustomUser user, String jwtToken) {
         return Token.builder()
                 .user(user)
                 .token(jwtToken)
