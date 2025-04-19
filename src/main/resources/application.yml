@@ -1,6 +1,6 @@
 spring:
   application:
-    name: bio
+    name: cefac-web
   datasource:
     url: jdbc:postgresql://localhost:5432/bio_db
     username: postgres
