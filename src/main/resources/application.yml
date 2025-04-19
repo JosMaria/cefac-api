@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: cefac-web
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bio_db
+    username: postgres
+    password: maria17
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+server:
+  error:
+    include-message: always
+
