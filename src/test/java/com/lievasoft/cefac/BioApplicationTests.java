@@ -1,4 +1,4 @@
-package com.lievasoft.bio;
+package com.lievasoft.cefac;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

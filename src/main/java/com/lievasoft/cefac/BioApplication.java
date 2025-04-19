@@ -1,4 +1,4 @@
-package com.lievasoft.bio;
+package com.lievasoft.cefac;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
