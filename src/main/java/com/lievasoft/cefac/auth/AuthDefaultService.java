@@ -32,7 +32,10 @@ public class AuthDefaultService implements AuthService {
 
     @Override
     public TokenResponse register(final RegisterRequest payload) {
-        throwExceptionIfExistsCustomUser(payload.username());
+        if (customUserRepository.existsByUsername(payload.username())) {
+            throw new EntityExistsException("User with username %s already exists".formatted(payload.username()));
+        }
+
         var customUserToPersist = customUserMapper.map(payload);
         var persistedCustomUser = customUserRepository.save(customUserToPersist);
         return generateTokens(persistedCustomUser);
@@ -55,12 +58,6 @@ public class AuthDefaultService implements AuthService {
         var countUpdatedTokens = tokenRepository.revokeTokensByUserId(obtainedCustomUser.getId());
         log.info("The count of updated tokens is {}", countUpdatedTokens);
         return generateTokens(obtainedCustomUser);
-    }
-
-    private void throwExceptionIfExistsCustomUser(String username) {
-        if (customUserRepository.existsByUsername(username)) {
-            throw new EntityExistsException("User with username %s already exists".formatted(username));
-        }
     }
 
     private TokenResponse generateTokens(CustomUser user) {

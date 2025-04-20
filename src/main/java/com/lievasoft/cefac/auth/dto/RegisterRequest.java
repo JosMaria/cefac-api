@@ -1,11 +1,11 @@
 package com.lievasoft.cefac.auth.dto;
 
-import jakarta.validation.constraints.NotBlank;
-
 public record RegisterRequest(
-        @NotBlank(message = "username field should not be null, empty or blank")
         String username,
-        @NotBlank(message = "password field should not be null, empty or blank")
-        String password
+        String name,
+        String lastname,
+        String alias,
+        String email,
+        String phone
 ) {
 }

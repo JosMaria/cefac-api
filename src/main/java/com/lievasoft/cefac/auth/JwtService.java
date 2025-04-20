@@ -37,7 +37,7 @@ public class JwtService {
                 .subject(user.getUsername())
                 .issuedAt(now)
                 .expiration(expirationDate)
-                .claims(Map.of())
+                .claims(Map.of("name", user.getName()))
                 .signWith(getSignInKey())
                 .compact();
     }
