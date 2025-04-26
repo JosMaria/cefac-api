@@ -22,7 +22,7 @@ public class CustomUserMapper {
                 .alias(payload.alias())
                 .email(payload.email())
                 .phone(payload.phone())
-                .username(payload.username())
+                .username(payload.email())
                 .password(password)
                 .build();
     }

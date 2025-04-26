@@ -33,7 +33,7 @@ public class CustomUser implements UserDetails {
     @Column(nullable = false, length = 30)
     private String alias;
 
-    @Column(nullable = false, length = 50)
+    @Column(unique = true, nullable = false, length = 50)
     private String email;
 
     @Column(nullable = false, length = 15)

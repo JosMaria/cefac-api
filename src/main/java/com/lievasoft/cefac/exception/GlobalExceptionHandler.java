@@ -1,5 +1,7 @@
 package com.lievasoft.cefac.exception;
 
+import com.lievasoft.cefac.exception.types.AlreadyExistsException;
+import com.lievasoft.cefac.exception.types.Problem;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,6 +26,18 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseV2> handleEntityAlreadyExists(AlreadyExistsException ex, HttpServletRequest request) {
+        log.error(ex.getMessage());
+        ErrorResponseV2 response = new ErrorResponseV2(
+                request.getServletPath(),
+                ex.getMessage(),
+                LocalDateTime.now(ZoneId.of("America/La_Paz")),
+                ex.getProblem()
+        );
+        return ResponseEntity.badRequest().body(response);
+    }
 
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<ErrorResponse> handleRepeatEntity(EntityExistsException ex, HttpServletRequest request) {
@@ -65,5 +79,19 @@ public class GlobalExceptionHandler {
         var response = new ErrorResponse(path, message, LocalDateTime.now(ZoneId.of("America/La_Paz")));
         log.error(message);
         return new ResponseEntity<>(response, status);
+    }
+
+    static class ErrorResponseV2 {
+        String path;
+        String reason;
+        LocalDateTime timestamp;
+        Problem problem;
+
+        public ErrorResponseV2(String path, String reason, LocalDateTime timestamp, Problem problem) {
+            this.path = path;
+            this.reason = reason;
+            this.timestamp = timestamp;
+            this.problem = problem;
+        }
     }
 }
