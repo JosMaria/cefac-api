@@ -18,7 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import static com.lievasoft.cefac.exception.types.Problem.REGISTERED_EMAIL;
+import static com.lievasoft.cefac.exception.Problem.REGISTERED_EMAIL;
 
 @Service
 @Slf4j
