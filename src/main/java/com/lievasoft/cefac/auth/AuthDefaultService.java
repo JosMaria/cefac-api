@@ -6,10 +6,10 @@ import com.lievasoft.cefac.auth.dto.TokenResponse;
 import com.lievasoft.cefac.entity.CustomUser;
 import com.lievasoft.cefac.entity.Token;
 import com.lievasoft.cefac.exception.BearerTokenException;
+import com.lievasoft.cefac.exception.types.AlreadyExistsException;
 import com.lievasoft.cefac.user.CustomUserMapper;
 import com.lievasoft.cefac.user.CustomUserRepository;
 import com.lievasoft.cefac.utils.HelperService;
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import static com.lievasoft.cefac.exception.Problem.REGISTERED_EMAIL;
 
 @Service
 @Slf4j
@@ -32,7 +34,11 @@ public class AuthDefaultService implements AuthService {
 
     @Override
     public TokenResponse register(final RegisterRequest payload) {
-        throwExceptionIfExistsCustomUser(payload.username());
+        if (customUserRepository.existsByEmail(payload.email())) {
+            String msg = "User with email %s already exists.".formatted(payload.email());
+            throw new AlreadyExistsException(msg, REGISTERED_EMAIL);
+        }
+
         var customUserToPersist = customUserMapper.map(payload);
         var persistedCustomUser = customUserRepository.save(customUserToPersist);
         return generateTokens(persistedCustomUser);
@@ -55,12 +61,6 @@ public class AuthDefaultService implements AuthService {
         var countUpdatedTokens = tokenRepository.revokeTokensByUserId(obtainedCustomUser.getId());
         log.info("The count of updated tokens is {}", countUpdatedTokens);
         return generateTokens(obtainedCustomUser);
-    }
-
-    private void throwExceptionIfExistsCustomUser(String username) {
-        if (customUserRepository.existsByUsername(username)) {
-            throw new EntityExistsException("User with username %s already exists".formatted(username));
-        }
     }
 
     private TokenResponse generateTokens(CustomUser user) {
