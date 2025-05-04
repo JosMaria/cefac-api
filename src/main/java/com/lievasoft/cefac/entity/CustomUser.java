@@ -3,10 +3,13 @@ package com.lievasoft.cefac.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -48,9 +51,24 @@ public class CustomUser implements UserDetails {
     @OneToMany(mappedBy = "user")
     private Collection<Token> tokens;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    @OneToMany
+    @JoinTable(
+            name = "users_permissions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private final Set<Permission> permissions = Collections.emptySet();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        permissions.forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission.getValue())));
+        return authorities;
     }
 
     @Override
