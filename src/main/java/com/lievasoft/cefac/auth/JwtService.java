@@ -20,8 +20,8 @@ public class JwtService {
 
     private static final long ONE_MINUTE = 60000;
 
-    private final long expiration = ONE_MINUTE * 5;
-    private final long refreshExpiration = ONE_MINUTE * 10;
+    private final long expiration = ONE_MINUTE * 15;
+    private final long refreshExpiration = ONE_MINUTE * 30;
     private final String secret = "miClaveSecretaSuperSeguraYLoSuficientementeLarga";
 
     public String generateToken(final CustomUser user) {
