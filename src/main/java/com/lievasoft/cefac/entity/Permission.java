@@ -1,21 +1,15 @@
 package com.lievasoft.cefac.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
 
-@Builder
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name = "permissions")
-public class Permission {
+public enum Permission {
+    PRODUCT_READ("product:read"),
+    PRODUCT_WRITE("product:write");
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    private final String permission;
 
-    @Column(nullable = false)
-    private String value;
+    Permission(String permission) {
+        this.permission = permission;
+    }
 }

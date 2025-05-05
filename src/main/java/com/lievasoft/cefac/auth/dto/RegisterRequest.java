@@ -1,10 +1,12 @@
 package com.lievasoft.cefac.auth.dto;
 
+import com.lievasoft.cefac.entity.Role;
+
 public record RegisterRequest(
         String name,
         String lastname,
-        String alias,
         String email,
-        String phone
+        String phone,
+        Role role
 ) {
 }

@@ -19,11 +19,11 @@ public class CustomUserMapper {
         return CustomUser.builder()
                 .name(payload.name())
                 .lastname(payload.lastname())
-                .alias(payload.alias())
                 .email(payload.email())
                 .phone(payload.phone())
                 .username(payload.email())
                 .password(password)
+                .role(payload.role())
                 .build();
     }
 }

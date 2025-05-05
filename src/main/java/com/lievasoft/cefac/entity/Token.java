@@ -20,7 +20,7 @@ public class Token {
     @SequenceGenerator(name = "token_sequence", sequenceName = "token_sequence", allocationSize = 1)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 300)
     private String token;
 
     @Enumerated(EnumType.STRING)

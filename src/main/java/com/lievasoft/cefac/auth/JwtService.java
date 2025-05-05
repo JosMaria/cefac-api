@@ -5,12 +5,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -33,11 +36,20 @@ public class JwtService {
         Date now = new Date(System.currentTimeMillis());
         Date expirationDate = new Date(now.getTime() + expiration);
 
+        Set<String> authorities = user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+
+        Map<String, Object> claims = Map.of(
+                "name", user.getName(),
+                "authorities", authorities
+        );
+
         return Jwts.builder()
                 .subject(user.getUsername())
                 .issuedAt(now)
                 .expiration(expirationDate)
-                .claims(Map.of("name", user.getName()))
+                .claims(claims)
                 .signWith(getSignInKey())
                 .compact();
     }

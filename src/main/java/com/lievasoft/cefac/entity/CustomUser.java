@@ -33,9 +33,6 @@ public class CustomUser implements UserDetails {
     @Column(nullable = false, length = 50)
     private String lastname;
 
-    @Column(nullable = false, length = 30)
-    private String alias;
-
     @Column(unique = true, nullable = false, length = 50)
     private String email;
 
@@ -55,20 +52,9 @@ public class CustomUser implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany
-    @JoinTable(
-            name = "users_permissions",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id")
-    )
-    private final Set<Permission> permissions = Collections.emptySet();
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
-        permissions.forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission.getValue())));
-        return authorities;
+        return role.getGrantedAuthorities();
     }
 
     @Override
