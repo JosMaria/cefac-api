@@ -19,7 +19,7 @@ public class CustomUserController {
 
     private final CustomUserService service;
 
-    @PreAuthorize("hasRole('ASSISTANT')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getUsers() {
         return ResponseEntity.ok(service.obtainAllUsers());

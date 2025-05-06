@@ -26,6 +26,6 @@ public class CustomUserDefaultService implements CustomUserService {
 
     @Override
     public List<UserResponseDto> obtainAllUsers() {
-        return Collections.emptyList();
+        return customUserRepository.findUsersList();
     }
 }

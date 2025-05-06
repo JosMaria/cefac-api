@@ -1,5 +1,6 @@
 package com.lievasoft.cefac.entity;
 
+import com.lievasoft.cefac.user.dto.UserResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,8 +19,30 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Table(name = "users")
+@Entity
+@NamedNativeQuery(
+        name = "CustomUser.findUserList",
+        query = """
+            SELECT id, name, lastname, email, phone, role
+            FROM users
+        """,
+        resultSetMapping = "UserListMapping"
+)
+@SqlResultSetMapping(
+        name = "UserListMapping",
+        classes = @ConstructorResult(
+                targetClass = UserResponseDto.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Long.class),
+                        @ColumnResult(name = "name", type = String.class),
+                        @ColumnResult(name = "lastname", type = String.class),
+                        @ColumnResult(name = "email", type = String.class),
+                        @ColumnResult(name = "phone", type = String.class),
+                        @ColumnResult(name = "role", type = Role.class)
+                }
+        )
+)
 public class CustomUser implements UserDetails {
 
     @Id

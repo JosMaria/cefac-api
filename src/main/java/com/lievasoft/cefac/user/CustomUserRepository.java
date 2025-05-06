@@ -1,8 +1,11 @@
 package com.lievasoft.cefac.user;
 
 import com.lievasoft.cefac.entity.CustomUser;
+import com.lievasoft.cefac.user.dto.UserResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
@@ -11,5 +14,6 @@ public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
 
     boolean existsByEmail(String email);
 
-    boolean existsByUsername(String username);
+    @Query(name = "CustomUser.findUserList", nativeQuery = true)
+    List<UserResponseDto> findUsersList();
 }
