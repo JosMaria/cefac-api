@@ -10,5 +10,5 @@ public interface CustomUserService extends UserDetailsService {
 
     List<UserResponseDto> obtainAllUsers();
 
-    void toggleEnabledState(UUID uuid);
+    void toggleDisabledState(UUID uuid);
 }

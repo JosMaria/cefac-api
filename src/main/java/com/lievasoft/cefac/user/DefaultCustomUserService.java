@@ -1,10 +1,8 @@
 package com.lievasoft.cefac.user;
 
 import com.lievasoft.cefac.entity.CustomUser;
-import com.lievasoft.cefac.entity.Role;
-import com.lievasoft.cefac.exception.types.InvalidOperationException;
+import com.lievasoft.cefac.exception.types.OperationNotAllowedException;
 import com.lievasoft.cefac.user.dto.UserResponseDto;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,14 +35,11 @@ public class DefaultCustomUserService implements CustomUserService {
 
     @Transactional
     @Override
-    public void toggleEnabledState(UUID uuid) {
+    public void toggleDisabledState(UUID uuid) {
         CustomUser obtainedUser = customUserRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("User with id: '%s' hasn't been founded".formatted(uuid)));
+                .filter(userToUpdate -> !userToUpdate.getRole().equals(ADMIN))
+                .orElseThrow(OperationNotAllowedException::new);
 
-        if (!obtainedUser.getRole().equals(ADMIN)) {
-            obtainedUser.setEnabled(!obtainedUser.isEnabled());
-        } else {
-            throw new InvalidOperationException();
-        }
+        obtainedUser.setDisabled(!obtainedUser.isDisabled());
     }
 }

@@ -23,9 +23,9 @@ public class CustomUserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{id}/enabled")
-    public ResponseEntity<Void> updateEnabledState(@PathVariable("id") UUID uuid) {
-        service.toggleEnabledState(uuid);
+    @PatchMapping("/{id}/disabled")
+    public ResponseEntity<Void> updateDisabledState(@PathVariable("id") UUID uuid) {
+        service.toggleDisabledState(uuid);
         return ResponseEntity.noContent().build();
     }
 }

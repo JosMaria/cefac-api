@@ -1,7 +1,7 @@
 package com.lievasoft.cefac.exception;
 
 import com.lievasoft.cefac.exception.types.AlreadyExistsException;
-import com.lievasoft.cefac.exception.types.InvalidOperationException;
+import com.lievasoft.cefac.exception.types.OperationNotAllowedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +22,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(InvalidOperationException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidOperation(InvalidOperationException ex, HttpServletRequest request) {
+    @ExceptionHandler(OperationNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleOperationNotAllowed(OperationNotAllowedException ex, HttpServletRequest request) {
         var response = createErrorResponse(request.getServletPath(), ex.getMessage(), ex.getProblem());
         log.error(ex.getMessage());
         return ResponseEntity.badRequest().body(response);

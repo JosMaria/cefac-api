@@ -74,11 +74,11 @@ public class CustomUser implements UserDetails {
     private Collection<Token> tokens;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 15)
     private Role role;
 
     @Column(nullable = false)
-    private boolean enabled = true;
+    private boolean disabled;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

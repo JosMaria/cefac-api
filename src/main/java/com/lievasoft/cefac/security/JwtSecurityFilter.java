@@ -47,7 +47,7 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
                     if (isTokenValid(token)) {
                         var username = jwtService.extractUsername(token);
                         var user = (CustomUser) customUserService.loadUserByUsername(username);
-                        if (user.isEnabled()) {
+                        if (!user.isDisabled()) {
                             var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                             WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
                             authenticationToken.setDetails(details);

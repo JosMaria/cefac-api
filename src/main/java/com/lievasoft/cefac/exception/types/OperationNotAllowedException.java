@@ -4,12 +4,12 @@ import com.lievasoft.cefac.exception.Problem;
 import lombok.Getter;
 
 @Getter
-public class InvalidOperationException extends RuntimeException {
+public class OperationNotAllowedException extends RuntimeException {
 
     private final Problem problem;
 
-    public InvalidOperationException() {
+    public OperationNotAllowedException() {
         super("This operation is prohibited.");
-        problem = Problem.INVALID_OPERATION;
+        problem = Problem.OPERATION_NOT_ALLOWED;
     }
 }
