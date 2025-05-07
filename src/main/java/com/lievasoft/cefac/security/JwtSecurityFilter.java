@@ -47,10 +47,12 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
                     if (isTokenValid(token)) {
                         var username = jwtService.extractUsername(token);
                         var user = (CustomUser) customUserService.loadUserByUsername(username);
-                        var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                        WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
-                        authenticationToken.setDetails(details);
-                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        if (user.isEnabled()) {
+                            var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                            WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
+                            authenticationToken.setDetails(details);
+                            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        }
                     }
                 });
 

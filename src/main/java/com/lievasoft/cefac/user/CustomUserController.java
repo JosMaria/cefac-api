@@ -1,16 +1,13 @@
 package com.lievasoft.cefac.user;
 
 import com.lievasoft.cefac.user.dto.UserResponseDto;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +20,12 @@ public class CustomUserController {
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getUsers() {
         return ResponseEntity.ok(service.obtainAllUsers());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/enabled")
+    public ResponseEntity<Void> updateEnabledState(@PathVariable("id") UUID uuid) {
+        service.toggleEnabledState(uuid);
+        return ResponseEntity.noContent().build();
     }
 }

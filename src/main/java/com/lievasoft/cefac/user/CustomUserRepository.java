@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
 
@@ -16,4 +17,6 @@ public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
 
     @Query(name = "CustomUser.findUserList", nativeQuery = true)
     List<UserResponseDto> findUsersList();
+
+    Optional<CustomUser> findByUuid(UUID uuid);
 }

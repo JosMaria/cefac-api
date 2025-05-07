@@ -3,14 +3,12 @@ package com.lievasoft.cefac.entity;
 import com.lievasoft.cefac.user.dto.UserResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -24,7 +22,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @NamedNativeQuery(
         name = "CustomUser.findUserList",
         query = """
-            SELECT id, name, lastname, email, phone, role
+            SELECT uuid AS id, name, lastname, email, phone, role
             FROM users
         """,
         resultSetMapping = "UserListMapping"
@@ -34,7 +32,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
         classes = @ConstructorResult(
                 targetClass = UserResponseDto.class,
                 columns = {
-                        @ColumnResult(name = "id", type = Long.class),
+                        @ColumnResult(name = "id", type = UUID.class),
                         @ColumnResult(name = "name", type = String.class),
                         @ColumnResult(name = "lastname", type = String.class),
                         @ColumnResult(name = "email", type = String.class),
@@ -49,6 +47,10 @@ public class CustomUser implements UserDetails {
     @GeneratedValue(strategy = SEQUENCE, generator = "custom_user_sequence")
     @SequenceGenerator(name = "custom_user_sequence", sequenceName = "custom_user_sequence", allocationSize = 1)
     private Long id;
+
+    @UuidGenerator
+    @Column(unique = true, updatable = false, nullable = false)
+    private UUID uuid;
 
     @Column(nullable = false, length = 50)
     private String name;
@@ -74,6 +76,9 @@ public class CustomUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Column(nullable = false)
+    private boolean enabled = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

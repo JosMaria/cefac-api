@@ -1,5 +1,6 @@
 package com.lievasoft.cefac.exception;
 
 public enum Problem {
-    REGISTERED_EMAIL
+    REGISTERED_EMAIL,
+    INVALID_OPERATION
 }
