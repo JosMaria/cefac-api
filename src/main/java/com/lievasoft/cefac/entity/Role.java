@@ -1,21 +1,18 @@
 package com.lievasoft.cefac.entity;
 
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.lievasoft.cefac.entity.Permission.PRODUCT_READ;
-import static com.lievasoft.cefac.entity.Permission.PRODUCT_WRITE;
+import static com.lievasoft.cefac.entity.Permission.ME_WHITE;
 
 @Getter
 public enum Role {
-    ADMIN(Set.of(PRODUCT_WRITE, PRODUCT_READ)),
-    ASSISTANT(Set.of(PRODUCT_READ)),
-    COUNTER(Set.of(PRODUCT_READ));
+    ADMIN(Set.of(ME_WHITE)),
+    ASSISTANT(Set.of(ME_WHITE)),
+    COUNTER(Set.of());
 
     private final Set<Permission> permissions;
 

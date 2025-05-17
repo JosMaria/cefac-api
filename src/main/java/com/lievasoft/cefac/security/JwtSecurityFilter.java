@@ -42,16 +42,15 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-        helper.obtainBearer(authHeader)
-                .ifPresent(token -> {
-                    if (isValidToken(token)) {
-                        var username = jwtService.extractUsername(token);
-                        var user = (CustomUser) customUserService.loadUserByUsername(username);
-                        if (!user.isDisabled()) {
-                            keepAuthentication(user, request);
-                        }
-                    }
-                });
+        helper.obtainBearer(authHeader).ifPresent(token -> {
+            if (isValidToken(token)) {
+                var username = jwtService.extractUsername(token);
+                var user = (CustomUser) customUserService.loadUserByUsername(username);
+                if (!user.isDisabled()) {
+                    keepAuthentication(user, request);
+                }
+            }
+        });
 
         filterChain.doFilter(request, response);
     }

@@ -3,6 +3,7 @@ package com.lievasoft.cefac.user;
 import com.lievasoft.cefac.entity.CustomUser;
 import com.lievasoft.cefac.exception.types.OperationNotAllowedException;
 import com.lievasoft.cefac.user.dto.UserResponseDto;
+import com.lievasoft.cefac.user.dto.UsernameUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +23,7 @@ public class DefaultCustomUserService implements CustomUserService {
     private final CustomUserRepository customUserRepository;
 
     @Override
-    public CustomUser loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUser loadUserByUsername(final String username) throws UsernameNotFoundException {
         return customUserRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
@@ -35,11 +36,16 @@ public class DefaultCustomUserService implements CustomUserService {
 
     @Transactional
     @Override
-    public void toggleDisabledState(UUID uuid) {
+    public void toggleDisabledState(final UUID uuid) {
         CustomUser obtainedUser = customUserRepository.findByUuid(uuid)
                 .filter(userToUpdate -> !userToUpdate.getRole().equals(ADMIN))
                 .orElseThrow(OperationNotAllowedException::new);
 
         obtainedUser.setDisabled(!obtainedUser.isDisabled());
+    }
+
+    @Override
+    public void modifyUsername(final String username) {
+
     }
 }

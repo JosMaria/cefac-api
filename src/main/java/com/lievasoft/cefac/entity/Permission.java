@@ -4,8 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum Permission {
-    PRODUCT_READ("product:read"),
-    PRODUCT_WRITE("product:write");
+    ME_WHITE("me:write");
 
     private final String permission;
 

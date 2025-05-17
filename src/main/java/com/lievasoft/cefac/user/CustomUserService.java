@@ -11,4 +11,6 @@ public interface CustomUserService extends UserDetailsService {
     List<UserResponseDto> obtainAllUsers();
 
     void toggleDisabledState(UUID uuid);
+
+    void modifyUsername(String username);
 }
