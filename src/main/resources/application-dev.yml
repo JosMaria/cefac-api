@@ -1,9 +1,9 @@
 # Database
-POSTGRESQL_HOST: localhost
-POSTGRESQL_PORT: 5432
-POSTGRESQL_NAME: bio_db
-POSTGRESQL_USERNAME: postgres
-POSTGRESQL_PASSWORD: maria17
+POSTGRES_HOST: localhost
+POSTGRES_PORT: 5432
+POSTGRES_DB: bio_db
+POSTGRES_USER: postgres
+POSTGRES_PASSWORD: maria17
 
 # Server Config
 CONTAINER_PORT: 8085
@@ -11,3 +11,5 @@ ACTIVE_PROFILE: dev
 
 # Web Config
 UI_APP_URL: http://localhost:5173
+
+JWT_SECRET: josmaria17cuentas?

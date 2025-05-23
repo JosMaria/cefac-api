@@ -1,4 +1,4 @@
-FROM maven:3.9.3 AS build
+FROM maven:3.9.9 AS build
 WORKDIR /app
 ARG CONTAINER_PORT
 COPY pom.xml /app
@@ -7,7 +7,7 @@ COPY . /app
 RUN mvn clean
 RUN mvn package -DskipTests -X
 
-FROM openjdk:17
+FROM amazoncorretto:17-alpine
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE ${CONTAINER_PORT}
 CMD ["java", "-jar", "app.jar"]
