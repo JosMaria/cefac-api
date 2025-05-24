@@ -25,7 +25,6 @@ public class CustomLogoutHandler implements LogoutHandler {
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         var authHeader = request.getHeader(AUTHORIZATION);
         var token = helper.obtainBearer(authHeader).orElseThrow(BearerTokenException::new);
-        Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
         var obtainedToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new EntityNotFoundException("Token not found"));
         obtainedToken.setRevoked(true);

@@ -3,7 +3,6 @@ package com.lievasoft.cefac.security;
 import com.lievasoft.cefac.auth.JwtService;
 import com.lievasoft.cefac.auth.TokenRepository;
 import com.lievasoft.cefac.entity.CustomUser;
-import com.lievasoft.cefac.entity.Token;
 import com.lievasoft.cefac.user.CustomUserService;
 import com.lievasoft.cefac.utils.HelperService;
 import jakarta.servlet.FilterChain;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -42,29 +42,29 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-        helper.obtainBearer(authHeader)
-                .ifPresent(token -> {
-                    if (isTokenValid(token)) {
-                        var username = jwtService.extractUsername(token);
-                        var user = (CustomUser) customUserService.loadUserByUsername(username);
-                        var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                        WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
-                        authenticationToken.setDetails(details);
-                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    }
-                });
+        helper.obtainBearer(authHeader).ifPresent(token -> {
+            if (isValidToken(token)) {
+                var username = jwtService.extractUsername(token);
+                var user = (CustomUser) customUserService.loadUserByUsername(username);
+                if (!user.isDisabled()) {
+                    keepAuthentication(user, request);
+                }
+            }
+        });
 
         filterChain.doFilter(request, response);
     }
 
-    private boolean isTokenValid(String value) {
-        boolean isValid = false;
-        var optionalToken = tokenRepository.findByToken(value);
-        if (optionalToken.isPresent()) {
-            Token obtainedToken = optionalToken.get();
-            isValid = !obtainedToken.isRevoked();
-        }
+    private void keepAuthentication(UserDetails user, HttpServletRequest request) {
+        var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
+        authenticationToken.setDetails(details);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+    }
 
-        return isValid;
+    private boolean isValidToken(String value) {
+        return tokenRepository.findByToken(value)
+                .filter(token -> !token.isRevoked())
+                .isPresent();
     }
 }

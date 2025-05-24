@@ -6,6 +6,7 @@ import com.lievasoft.cefac.auth.dto.TokenResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -17,8 +18,9 @@ public class AuthController {
 
     private final AuthService service;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(@Valid @RequestBody final RegisterRequest request) {
+    public ResponseEntity<TokenResponse> register(@RequestBody final RegisterRequest request) {
         var response = service.register(request);
         return ResponseEntity.ok(response);
     }

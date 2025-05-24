@@ -1,16 +1,21 @@
+server:
+  port: ${CONTAINER_PORT:8080}
+
 spring:
-  application:
-    name: cefac-web
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
   datasource:
-    url: jdbc:postgresql://localhost:5432/bio_db
-    username: postgres
-    password: maria17
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    hikari:
+      connection-timeout: 10000
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     open-in-view: false
-server:
-  error:
-    include-message: always
 
+ui:
+  app:
+    url: ${UI_APP_URL}
