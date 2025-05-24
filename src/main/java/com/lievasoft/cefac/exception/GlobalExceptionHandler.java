@@ -1,6 +1,7 @@
 package com.lievasoft.cefac.exception;
 
 import com.lievasoft.cefac.exception.types.AlreadyExistsException;
+import com.lievasoft.cefac.exception.types.OperationNotAllowedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEntityAlreadyExists(AlreadyExistsException ex, HttpServletRequest request) {
+        var response = createErrorResponse(request.getServletPath(), ex.getMessage(), ex.getProblem());
         log.error(ex.getMessage());
-        ErrorResponse response = new ErrorResponse(
-                request.getServletPath(),
-                ex.getMessage(),
-                LocalDateTime.now(ZoneId.of("America/La_Paz")),
-                ex.getProblem()
-        );
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(OperationNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleOperationNotAllowed(OperationNotAllowedException ex, HttpServletRequest request) {
+        var response = createErrorResponse(request.getServletPath(), ex.getMessage(), ex.getProblem());
+        log.error(ex.getMessage());
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    private ErrorResponse createErrorResponse(String path, String message, Problem problem) {
+        return new ErrorResponse(path, message, LocalDateTime.now(ZoneId.of("America/La_Paz")), problem);
     }
 //
 //    @ExceptionHandler(EntityExistsException.class)
@@ -31,10 +38,7 @@ public class GlobalExceptionHandler {
 //        return createErrorResponse(ex.getMessage(), request.getServletPath(), BAD_REQUEST);
 //    }
 //
-//    @ExceptionHandler(EntityNotFoundException.class)
-//    public ResponseEntity<ErrorResponse> handleEntityNotFound(EntityNotFoundException ex, HttpServletRequest request) {
-//        return createErrorResponse(ex.getMessage(), request.getServletPath(), BAD_REQUEST);
-//    }
+//
 //
 //    @ExceptionHandler(UsernameNotFoundException.class)
 //    public ResponseEntity<ErrorResponse> handleUsernameNotFound(UsernameNotFoundException ex, HttpServletRequest request) {

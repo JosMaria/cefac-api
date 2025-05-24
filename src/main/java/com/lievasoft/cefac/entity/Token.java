@@ -2,6 +2,9 @@ package com.lievasoft.cefac.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
@@ -16,14 +19,15 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 public class Token {
 
     @Id
-    @GeneratedValue(strategy = SEQUENCE, generator = "token_sequence")
-    @SequenceGenerator(name = "token_sequence", sequenceName = "token_sequence", allocationSize = 1)
-    private Long id;
+    @UuidGenerator
+    @Column(length = 100)
+    private String id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 300)
     private String token;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 15)
     private TokenType tokenType = TokenType.BEARER;
 
     private boolean revoked;

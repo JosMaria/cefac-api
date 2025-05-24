@@ -38,7 +38,6 @@ public class AuthDefaultService implements AuthService {
             String msg = "User with email %s already exists.".formatted(payload.email());
             throw new AlreadyExistsException(msg, REGISTERED_EMAIL);
         }
-
         var customUserToPersist = customUserMapper.map(payload);
         var persistedCustomUser = customUserRepository.save(customUserToPersist);
         return generateTokens(persistedCustomUser);

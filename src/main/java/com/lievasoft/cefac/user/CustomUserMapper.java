@@ -13,17 +13,14 @@ public class CustomUserMapper {
     private final PasswordEncoder passwordEncoder;
 
     public CustomUser map(final RegisterRequest payload) {
-        var passwordTemp = payload.phone();
-        var password = passwordEncoder.encode(passwordTemp);
-
+        var passwordTemp = passwordEncoder.encode(payload.email());
         return CustomUser.builder()
                 .name(payload.name())
                 .lastname(payload.lastname())
-                .alias(payload.alias())
                 .email(payload.email())
-                .phone(payload.phone())
                 .username(payload.email())
-                .password(password)
+                .password(passwordTemp)
+                .role(payload.role())
                 .build();
     }
 }
