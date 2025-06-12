@@ -1,6 +1,9 @@
 package com.lievasoft.cefac.product;
 
+import com.lievasoft.cefac.product.dto.ProductCreateDto;
+import com.lievasoft.cefac.product.dto.ProductResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +13,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
 public class ProductController {
+
+    private final ProductService service;
+
+    /*@PostMapping
+    public ResponseEntity<ProductResponse> save(@RequestBody ProductCreateDto payload) {
+        return ResponseEntity.ok(service.create(payload));
+    }
 
     @GetMapping
     public ResponseEntity<String> getProducts(Authentication authentication, Principal principal) {
         return ResponseEntity.ok("GET all products");
-    }
+    }*/
 
     @GetMapping("/client-info")
     public Map<String, String> getClientInfo(HttpServletRequest request) {

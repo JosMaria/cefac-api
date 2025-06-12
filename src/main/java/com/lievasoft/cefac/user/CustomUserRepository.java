@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
 
-    Optional<CustomUser> findByUsername(String username);
+    Optional<CustomUser> findByEmail(String email);
 
-    boolean existsByEmail(String email);
+    Optional<CustomUser> findByUsername(String username);
 
     @Query(name = "CustomUser.findUserList", nativeQuery = true)
     List<UserResponseDto> findUsersList();

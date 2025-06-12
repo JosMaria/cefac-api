@@ -1,5 +1,6 @@
-package com.lievasoft.cefac.auth;
+package com.lievasoft.cefac.controller;
 
+import com.lievasoft.cefac.service.AuthService;
 import com.lievasoft.cefac.auth.dto.LoginRequest;
 import com.lievasoft.cefac.auth.dto.RegisterRequest;
 import com.lievasoft.cefac.auth.dto.TokenResponse;
@@ -18,7 +19,7 @@ public class AuthController {
 
     private final AuthService service;
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<TokenResponse> register(@RequestBody final RegisterRequest request) {
         var response = service.register(request);

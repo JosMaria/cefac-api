@@ -12,7 +12,7 @@ public class CustomUserMapper {
 
     private final PasswordEncoder passwordEncoder;
 
-    public CustomUser map(final RegisterRequest payload) {
+    public CustomUser mapToCustomUser(final RegisterRequest payload) {
         var passwordTemp = passwordEncoder.encode(payload.email());
         return CustomUser.builder()
                 .name(payload.name())

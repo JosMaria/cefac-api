@@ -1,5 +1,7 @@
-package com.lievasoft.cefac.auth;
+package com.lievasoft.cefac.service.impl;
 
+import com.lievasoft.cefac.auth.JwtService;
+import com.lievasoft.cefac.auth.TokenRepository;
 import com.lievasoft.cefac.auth.dto.LoginRequest;
 import com.lievasoft.cefac.auth.dto.RegisterRequest;
 import com.lievasoft.cefac.auth.dto.TokenResponse;
@@ -7,6 +9,7 @@ import com.lievasoft.cefac.entity.CustomUser;
 import com.lievasoft.cefac.entity.Token;
 import com.lievasoft.cefac.exception.BearerTokenException;
 import com.lievasoft.cefac.exception.types.AlreadyExistsException;
+import com.lievasoft.cefac.service.AuthService;
 import com.lievasoft.cefac.user.CustomUserMapper;
 import com.lievasoft.cefac.user.CustomUserRepository;
 import com.lievasoft.cefac.utils.HelperService;
@@ -23,22 +26,25 @@ import static com.lievasoft.cefac.exception.Problem.REGISTERED_EMAIL;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AuthDefaultService implements AuthService {
+public class DefaultAuthService implements AuthService {
 
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final CustomUserMapper customUserMapper;
     private final CustomUserRepository customUserRepository;
+    private final CustomUserMapper customUserMapper;
     private final TokenRepository tokenRepository;
+    private final JwtService jwtService;
     private final HelperService helper;
 
     @Override
     public TokenResponse register(final RegisterRequest payload) {
-        if (customUserRepository.existsByEmail(payload.email())) {
-            String msg = "User with email %s already exists.".formatted(payload.email());
-            throw new AlreadyExistsException(msg, REGISTERED_EMAIL);
-        }
-        var customUserToPersist = customUserMapper.map(payload);
+        customUserRepository
+                .findByEmail(payload.email())
+                .ifPresent(customUser -> {
+                    String msg = "User with email %s already exists.".formatted(customUser.getEmail());
+                    throw new AlreadyExistsException(msg, REGISTERED_EMAIL);
+                });
+
+        var customUserToPersist = customUserMapper.mapToCustomUser(payload);
         var persistedCustomUser = customUserRepository.save(customUserToPersist);
         return generateTokens(persistedCustomUser);
     }

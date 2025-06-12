@@ -1,4 +1,4 @@
-package com.lievasoft.cefac.auth;
+package com.lievasoft.cefac.service;
 
 import com.lievasoft.cefac.auth.dto.LoginRequest;
 import com.lievasoft.cefac.auth.dto.RegisterRequest;
