@@ -1,6 +1,6 @@
 package com.lievasoft.cefac.security;
 
-import com.lievasoft.cefac.user.CustomUserService;
+import com.lievasoft.cefac.service.CustomUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

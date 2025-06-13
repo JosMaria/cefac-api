@@ -1,13 +1,11 @@
 package com.lievasoft.cefac.entity;
 
+import com.lievasoft.cefac.entity.user.CustomUser;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.util.UUID;
-
 import static jakarta.persistence.FetchType.LAZY;
-import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Builder
 @Getter

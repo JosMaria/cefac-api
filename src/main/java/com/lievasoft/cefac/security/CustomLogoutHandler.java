@@ -1,6 +1,6 @@
 package com.lievasoft.cefac.security;
 
-import com.lievasoft.cefac.auth.TokenRepository;
+import com.lievasoft.cefac.repository.TokenRepository;
 import com.lievasoft.cefac.exception.BearerTokenException;
 import com.lievasoft.cefac.utils.HelperService;
 import jakarta.persistence.EntityNotFoundException;
@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 

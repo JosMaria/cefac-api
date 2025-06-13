@@ -1,9 +1,9 @@
 package com.lievasoft.cefac.security;
 
-import com.lievasoft.cefac.auth.JwtService;
-import com.lievasoft.cefac.auth.TokenRepository;
-import com.lievasoft.cefac.entity.CustomUser;
-import com.lievasoft.cefac.user.CustomUserService;
+import com.lievasoft.cefac.service.impl.DefaultJwtService;
+import com.lievasoft.cefac.repository.TokenRepository;
+import com.lievasoft.cefac.entity.user.CustomUser;
+import com.lievasoft.cefac.service.CustomUserService;
 import com.lievasoft.cefac.utils.HelperService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +26,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequiredArgsConstructor
 public class JwtSecurityFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final DefaultJwtService jwtService;
     private final CustomUserService customUserService;
     private final HelperService helper;
     private final TokenRepository tokenRepository;

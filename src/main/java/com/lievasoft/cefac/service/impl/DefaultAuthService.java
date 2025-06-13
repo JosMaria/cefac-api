@@ -1,17 +1,16 @@
 package com.lievasoft.cefac.service.impl;
 
-import com.lievasoft.cefac.auth.JwtService;
-import com.lievasoft.cefac.auth.TokenRepository;
-import com.lievasoft.cefac.auth.dto.LoginRequest;
-import com.lievasoft.cefac.auth.dto.RegisterRequest;
-import com.lievasoft.cefac.auth.dto.TokenResponse;
-import com.lievasoft.cefac.entity.CustomUser;
+import com.lievasoft.cefac.repository.TokenRepository;
+import com.lievasoft.cefac.dto.auth.LoginRequestDto;
+import com.lievasoft.cefac.dto.auth.RegisterRequestDto;
+import com.lievasoft.cefac.dto.auth.TokenResponseDto;
+import com.lievasoft.cefac.entity.user.CustomUser;
 import com.lievasoft.cefac.entity.Token;
 import com.lievasoft.cefac.exception.BearerTokenException;
 import com.lievasoft.cefac.exception.types.AlreadyExistsException;
 import com.lievasoft.cefac.service.AuthService;
-import com.lievasoft.cefac.user.CustomUserMapper;
-import com.lievasoft.cefac.user.CustomUserRepository;
+import com.lievasoft.cefac.mapper.CustomUserMapper;
+import com.lievasoft.cefac.repository.CustomUserRepository;
 import com.lievasoft.cefac.utils.HelperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +31,11 @@ public class DefaultAuthService implements AuthService {
     private final CustomUserRepository customUserRepository;
     private final CustomUserMapper customUserMapper;
     private final TokenRepository tokenRepository;
-    private final JwtService jwtService;
+    private final DefaultJwtService jwtService;
     private final HelperService helper;
 
     @Override
-    public TokenResponse register(final RegisterRequest payload) {
+    public TokenResponseDto register(final RegisterRequestDto payload) {
         customUserRepository
                 .findByEmail(payload.email())
                 .ifPresent(customUser -> {
@@ -50,7 +49,7 @@ public class DefaultAuthService implements AuthService {
     }
 
     @Override
-    public TokenResponse login(final LoginRequest request) {
+    public TokenResponseDto login(final LoginRequestDto request) {
         var authentication = new UsernamePasswordAuthenticationToken(request.username(), request.password());
         Authentication authenticated = authenticationManager.authenticate(authentication);
         var obtainedCustomUser = (CustomUser) authenticated.getPrincipal();
@@ -58,7 +57,7 @@ public class DefaultAuthService implements AuthService {
     }
 
     @Override
-    public TokenResponse refreshToken(final String authHeader) {
+    public TokenResponseDto refreshToken(final String authHeader) {
         var refreshToken = helper.obtainBearer(authHeader).orElseThrow(BearerTokenException::new);
         var username = jwtService.extractUsername(refreshToken);
         var obtainedCustomUser = customUserRepository.findByUsername(username)
@@ -68,12 +67,12 @@ public class DefaultAuthService implements AuthService {
         return generateTokens(obtainedCustomUser);
     }
 
-    private TokenResponse generateTokens(CustomUser user) {
+    private TokenResponseDto generateTokens(CustomUser user) {
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         Token tokenToPersist = createTokenEntity(user, jwtToken);
         tokenRepository.save(tokenToPersist);
-        return new TokenResponse(jwtToken, refreshToken);
+        return new TokenResponseDto(jwtToken, refreshToken);
     }
 
     private Token createTokenEntity(CustomUser user, String jwtToken) {

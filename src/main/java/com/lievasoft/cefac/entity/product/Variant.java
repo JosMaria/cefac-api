@@ -1,0 +1,27 @@
+package com.lievasoft.cefac.entity.product;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
+
+import static jakarta.persistence.FetchType.LAZY;
+
+@Entity
+@Table(name = "variants")
+public class Variant {
+
+    @Id
+    @UuidGenerator
+    private UUID id;
+
+    @ManyToOne(fetch = LAZY, optional = false)
+    private Product product;
+
+    private Double price;
+
+    private Double quantity;
+}

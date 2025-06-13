@@ -1,0 +1,22 @@
+package com.lievasoft.cefac.repository;
+
+import com.lievasoft.cefac.dto.user.UserResponseDto;
+import com.lievasoft.cefac.entity.user.CustomUser;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface CustomUserRepository extends JpaRepository<CustomUser, Long> {
+
+    Optional<CustomUser> findByEmail(String email);
+
+    Optional<CustomUser> findByUsername(String username);
+
+    @Query(name = "CustomUser.findUserList", nativeQuery = true)
+    List<UserResponseDto> findUsersList();
+
+    Optional<CustomUser> findByUuid(UUID uuid);
+}

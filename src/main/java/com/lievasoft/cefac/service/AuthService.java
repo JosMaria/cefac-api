@@ -1,14 +1,14 @@
 package com.lievasoft.cefac.service;
 
-import com.lievasoft.cefac.auth.dto.LoginRequest;
-import com.lievasoft.cefac.auth.dto.RegisterRequest;
-import com.lievasoft.cefac.auth.dto.TokenResponse;
+import com.lievasoft.cefac.dto.auth.LoginRequestDto;
+import com.lievasoft.cefac.dto.auth.RegisterRequestDto;
+import com.lievasoft.cefac.dto.auth.TokenResponseDto;
 
 public interface AuthService {
 
-    TokenResponse register(RegisterRequest request);
+    TokenResponseDto register(RegisterRequestDto request);
 
-    TokenResponse login(LoginRequest request);
+    TokenResponseDto login(LoginRequestDto request);
 
-    TokenResponse refreshToken(String authHeader);
+    TokenResponseDto refreshToken(String authHeader);
 }
