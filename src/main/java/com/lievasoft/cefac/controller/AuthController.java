@@ -19,17 +19,16 @@ public class AuthController {
 
     private final AuthService service;
 
-//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<TokenResponse> register(@RequestBody final RegisterRequest request) {
-        var response = service.register(request);
-        return ResponseEntity.ok(response);
+        var tokenResponse = service.register(request);
+        return ResponseEntity.ok(tokenResponse);
     }
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> authenticate(@Valid @RequestBody final LoginRequest request) {
-        TokenResponse response = service.login(request);
-        return ResponseEntity.ok(response);
+        var tokenResponse = service.login(request);
+        return ResponseEntity.ok(tokenResponse);
     }
 
     @PostMapping("/refresh-token")
