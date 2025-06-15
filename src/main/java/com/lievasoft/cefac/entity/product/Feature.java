@@ -4,12 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
-import static jakarta.persistence.FetchType.LAZY;
-
+@NoArgsConstructor
 @Entity
 @Table(name = "features")
 public class Feature {
@@ -18,8 +18,12 @@ public class Feature {
     @UuidGenerator
     private UUID id;
 
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne
     private Product product;
 
     private String description;
+
+    public Feature(String description) {
+        this.description = description;
+    }
 }

@@ -4,24 +4,29 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
-import static jakarta.persistence.FetchType.LAZY;
-
+@NoArgsConstructor
 @Entity
-@Table(name = "uses")
-public class Uses {
+@Table(name = "usages")
+public class Usage {
 
     @Id
     @UuidGenerator
     private UUID id;
 
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne
     private Product product;
 
     private String mode;
 
     private String information;
+
+    public Usage(String mode, String information) {
+        this.mode = mode;
+        this.information = information;
+    }
 }

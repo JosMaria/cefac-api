@@ -16,9 +16,9 @@ public interface TokenRepository extends JpaRepository<Token, String> {
     @Transactional
     @Modifying
     @Query("""
-        UPDATE Token
-        SET revoked = TRUE
-        WHERE user.id = :userId
-    """)
+                UPDATE Token
+                SET revoked = TRUE
+                WHERE user.id = :userId
+            """)
     int revokeTokensByUserId(@Param("userId") Long userId);
 }

@@ -1,6 +1,6 @@
 package com.lievasoft.cefac.controller;
 
-import com.lievasoft.cefac.dto.product.ProductCreateDto;
+import com.lievasoft.cefac.dto.product.CreateProductDto;
 import com.lievasoft.cefac.dto.product.ProductResponseDto;
 import com.lievasoft.cefac.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class ProductController {
     private final ProductService service;
 
     @PostMapping
-    public ResponseEntity<ProductResponseDto> save(@RequestBody ProductCreateDto payload) {
+    public ResponseEntity<ProductResponseDto> save(@RequestBody CreateProductDto payload) {
         var productResponseDto = service.create(payload);
         return ResponseEntity.ok(productResponseDto);
     }
