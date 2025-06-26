@@ -47,14 +47,23 @@ public class Product {
     private final List<Variant> variants = new ArrayList<>();
 
     public void addFeatures(List<Feature> features) {
-        this.features.addAll(features);
+        features.forEach(feature -> {
+            feature.setProduct(this);
+            this.features.add(feature);
+        });
     }
 
-    public void addUsages(List<Usage> usage) {
-        this.usages.addAll(usage);
+    public void addUsages(List<Usage> usages) {
+        usages.forEach(usage -> {
+            usage.setProduct(this);
+            this.usages.add(usage);
+        });
     }
 
     public void addVariants(List<Variant> variants) {
-        this.variants.addAll(variants);
+        variants.forEach(variant -> {
+            variant.setProduct(this);
+            this.variants.add(variant);
+        });
     }
 }
