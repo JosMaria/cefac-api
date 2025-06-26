@@ -10,12 +10,10 @@ public record CreateProductDto(
         Measure measure,
         String note,
         String warning,
-        List<FeatureDto> features,
+        List<String> features,
         List<VariantDto> variants,
         List<UsageDto> usages
 ) {
-    public record FeatureDto(String description) {}
-
     public record VariantDto(double price, double quantity) {}
 
     public record UsageDto(String mode, String information) {}

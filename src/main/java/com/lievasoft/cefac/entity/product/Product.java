@@ -37,13 +37,13 @@ public class Product {
     @Column(length = 1000)
     private String warning;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
     private final List<Feature> features = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
     private final List<Usage> usages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
     private final List<Variant> variants = new ArrayList<>();
 
     public void addFeatures(List<Feature> features) {
